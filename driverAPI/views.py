@@ -4,10 +4,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
-from .models import Driver, DriverLocation
-from .serializers import DriverRegistrationSerializer, DriverLocationSerializer, DriverLoginSerializer
-from django.contrib.auth import login
-import io
+from .models import Driver, DriverLocation, DriverRidesHistory
+from .serializers import DriverRegistrationSerializer, DriverLoginSerializer, DriverLocationSerializer, PassengerTravelHistorySerializer
 from rest_framework.parsers import JSONParser
 
 
@@ -60,6 +58,31 @@ class GetDriverLocations(APIView):
         serializer = DriverLocationSerializer(data=request.data, context=context)
         if serializer.is_valid():
             serializer.save()
+            print("Driver ID ----------------->> %s"%request.session['driver_id'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class DriverTravelHistoryList(APIView):
+
+    serializer_class = PassengerTravelHistorySerializer
+
+    def get(self, request, format=None):
+        driver_id = request.session['driver_id']
+        print("Driver iioioa voh uv oa v aiov ha   %s"%driver_id)
+        driver = Driver.objects.get(pk=driver_id)
+        travel_history = DriverRidesHistory.objects.filter(driver_id=driver)
+        if len(travel_history) > 0:
+            serializer = PassengerTravelHistorySerializer(travel_history, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            data = {"No history": "You do not have any history of travelling"}
+            return Response(data)
+
+
+class Logout(APIView):
+
+    def get(self, request, format=None):
+        del request.session['driver_id']
+        # data = {"logout": "logged out successfully"}
+        return Response(request)

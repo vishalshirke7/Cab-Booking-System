@@ -14,7 +14,18 @@ class Passenger(models.Model):
 
 class TravelHistory(models.Model):
     passenger_id = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
     source_address = models.TextField()
     destination_address = models.TextField()
     booked_time = models.DateTimeField(auto_now_add=True)
-    car_no = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    car_no = models.CharField(max_length=50)
+
+
+# class RequestedCab(models.Model):
+#     car_no = models.IntegerField()
+#     passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+#     source_add = models.TextField()
+#     dest_add = models.TextField()
+#     requested_time = models.DateTimeField(auto_now_add=True)
+
+
