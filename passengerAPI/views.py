@@ -56,6 +56,14 @@ class PassengerLogin(APIView):
 
 class GetListOfAvailableCab(APIView):
 
+    """
+    This function returns a list of available drivers, according the source address given by passenger
+    It uses geoencoding api of google maps to convert latitude, longitude to address and vice versa.
+    Calculating available cabs is done by calculating distance between source address and available cabs location.
+    If this distance is < 4 kms,  then these cabs are shown as available.
+
+    """
+
     serializer_class = GetAvailableCabSerializer
 
     def post(self, request, format=None):
@@ -91,6 +99,11 @@ class GetListOfAvailableCab(APIView):
 
 class BookCab(APIView):
 
+    """
+    This function makes a request to book cab by entering car_no, (selecting an available cab from map i.e tapping on it
+    in real scenario) and arrange a ride.
+
+    """
     serializer_class = BookCabSerializer
 
     def post(self, request, format=None):

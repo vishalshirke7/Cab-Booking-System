@@ -5,6 +5,9 @@ from django.db.models import DecimalField
 
 
 class Passenger(models.Model):
+    """
+    Stores passenger info
+    """
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
     email = models.EmailField(unique=True)

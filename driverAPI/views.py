@@ -32,6 +32,10 @@ class DriverRegistration(APIView):
 
 class DriverLogin(APIView):
 
+    """
+    Log in a driver
+
+    """
     serializer_class = DriverLoginSerializer
 
     def post(self, request, format=None):
@@ -45,6 +49,10 @@ class DriverLogin(APIView):
 
 class GetDriverLocations(APIView):
 
+    """
+    This function gets the locations of all active drivers who are currently driving the cab
+
+    """
     serializer_class = DriverLocationSerializer
 
     def get(self, request, format=None):
