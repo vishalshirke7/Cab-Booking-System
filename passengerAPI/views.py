@@ -1,7 +1,8 @@
 import decimal
+from functools import partial
 
 from django.shortcuts import render, HttpResponse, redirect, reverse
-from rest_framework import viewsets, views, generics, status
+from rest_framework import viewsets, views, generics, status, permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,6 +20,15 @@ import requests
 
 
 # gmaps = googlemaps.Client(key='AIzaSyAmQMbreF-nBNB3T527hAxyXZ9-KsUj-sU')
+
+class CustomPermissionsForPassenger(permissions.BasePermission):
+
+    def __init__(self, allowed_methods):
+        self.allowed_methods = allowed_methods
+
+    def has_permission(self, request, view):
+        if 'passenger_id' in request.session.keys():
+            return request.method in self.allowed_methods
 
 
 class PassengerRegistration(APIView):
@@ -65,11 +75,12 @@ class GetListOfAvailableCab(APIView):
     """
 
     serializer_class = GetAvailableCabSerializer
+    permission_classes = (partial(CustomPermissionsForPassenger, ['GET', 'HEAD', 'POST']),)
 
     def post(self, request, format=None):
         serializer = GetAvailableCabSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            gmaps = googlemaps.Client(key='AIzaSyA6vUErWEUlI8co4Qj5k4M6C3Efg5Wp6wY')
+            gmaps = googlemaps.Client(key='AIzaSyC_l1VzV0gi2yuPXCYcI2sMYcX4ytpPIoE')
             request.session['source_address'] = request.data['Source_address']
             request.session['destination_address'] = request.data['Destination_address']
             geocode_result = gmaps.geocode(request.data['Source_address'])
@@ -105,6 +116,7 @@ class BookCab(APIView):
 
     """
     serializer_class = BookCabSerializer
+    permission_classes = (partial(CustomPermissionsForPassenger, ['GET', 'HEAD', 'POST']),)
 
     def post(self, request, format=None):
         context = {
@@ -129,6 +141,7 @@ class BookCab(APIView):
 class TravelHistoryList(APIView):
 
     serializer_class = PassengerTravelHistorySerializer
+    permission_classes = (partial(CustomPermissionsForPassenger, ['GET', 'HEAD', 'POST']),)
 
     def get(self, request, format=None):
         passenger_id = request.session['passenger_id']

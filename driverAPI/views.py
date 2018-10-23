@@ -1,3 +1,5 @@
+from functools import partial
+
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from rest_framework import viewsets, views, generics, status
 from rest_framework.parsers import JSONParser
@@ -7,6 +9,17 @@ from rest_framework.views import APIView
 from .models import Driver, DriverLocation, DriverRidesHistory
 from .serializers import DriverRegistrationSerializer, DriverLoginSerializer, DriverLocationSerializer, PassengerTravelHistorySerializer
 from rest_framework.parsers import JSONParser
+from rest_framework import permissions
+
+
+class CustomPermissions(permissions.BasePermission):
+
+    def __init__(self, allowed_methods):
+        self.allowed_methods = allowed_methods
+
+    def has_permission(self, request, view):
+        if 'driver_id' in request.session.keys():
+            return request.method in self.allowed_methods
 
 
 class DriverRegistration(APIView):
@@ -54,6 +67,7 @@ class GetDriverLocations(APIView):
 
     """
     serializer_class = DriverLocationSerializer
+    permission_classes = (partial(CustomPermissions, ['GET', 'HEAD', 'POST']),)
 
     def get(self, request, format=None):
         driver_locations = DriverLocation.objects.all()
@@ -74,6 +88,7 @@ class GetDriverLocations(APIView):
 class DriverTravelHistoryList(APIView):
 
     serializer_class = PassengerTravelHistorySerializer
+    permission_classes = (partial(CustomPermissions, ['GET', 'HEAD', 'POST']),)
 
     def get(self, request, format=None):
         driver_id = request.session['driver_id']
@@ -92,5 +107,5 @@ class Logout(APIView):
 
     def get(self, request, format=None):
         del request.session['driver_id']
-        # data = {"logout": "logged out successfully"}
-        return Response(request)
+        data = {"logout": "logged out successfully"}
+        return Response(data, status=status.HTTP_200_OK)
