@@ -80,7 +80,6 @@ class GetDriverLocations(APIView):
         serializer = DriverLocationSerializer(data=request.data, context=context)
         if serializer.is_valid():
             serializer.save()
-            print("Driver ID ----------------->> %s"%request.session['driver_id'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -92,7 +91,6 @@ class DriverTravelHistoryList(APIView):
 
     def get(self, request, format=None):
         driver_id = request.session['driver_id']
-        print("Driver iioioa voh uv oa v aiov ha   %s"%driver_id)
         driver = Driver.objects.get(pk=driver_id)
         travel_history = DriverRidesHistory.objects.filter(driver_id=driver)
         if len(travel_history) > 0:

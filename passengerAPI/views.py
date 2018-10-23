@@ -1,25 +1,18 @@
 import decimal
 from functools import partial
-
-from django.shortcuts import render, HttpResponse, redirect, reverse
 from rest_framework import viewsets, views, generics, status, permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from driverAPI.models import DriverLocation
 from driverAPI.serializers import DriverInfoSerializer
 from .models import Passenger, TravelHistory
 from rest_framework import serializers
 from .serializers import PassengerRegistrationSerializer, PassengerLoginSerializer, GetAvailableCabSerializer, BookCabSerializer, PassengerTravelHistorySerializer
-from django.contrib.auth import login
-
 import geopy.distance
 import googlemaps
 import requests
 
-
-# gmaps = googlemaps.Client(key='AIzaSyAmQMbreF-nBNB3T527hAxyXZ9-KsUj-sU')
 
 class CustomPermissionsForPassenger(permissions.BasePermission):
 
@@ -79,8 +72,9 @@ class GetListOfAvailableCab(APIView):
 
     def post(self, request, format=None):
         serializer = GetAvailableCabSerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
-            gmaps = googlemaps.Client(key='AIzaSyC_l1VzV0gi2yuPXCYcI2sMYcX4ytpPIoE')
+            gmaps = googlemaps.Client(key='AIzaSyAOgj3TyH_vnb2ruto_A44YF8onzkzcoYc')
             request.session['source_address'] = request.data['Source_address']
             request.session['destination_address'] = request.data['Destination_address']
             geocode_result = gmaps.geocode(request.data['Source_address'])
@@ -98,11 +92,9 @@ class GetListOfAvailableCab(APIView):
                     available_drivers_list.append(driver)
             if available_drivers_list:
                 serializer = DriverInfoSerializer(available_drivers_list, many=True)
-                print("Passenger ID ----------------->> %s" % request.session['passenger_id'])
                 return Response(serializer.data)
             else:
                 data = {"Unavailable": "Sorry, no cabs are available at this time"}
-                print("Passenger ID ----------------->> %s" % request.session['passenger_id'])
                 return Response(data)
             # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -124,13 +116,9 @@ class BookCab(APIView):
             'source_address': request.session['source_address'],
             'destination_address': request.session['destination_address']
             }
-        print(request.session['passenger_id'])
-        print(request.session['source_address'])
-        print(request.session['destination_address'])
         serializer = BookCabSerializer(data=request.data, context=context)
         if serializer.is_valid():
             serializer.save()
-            print("Passenger ID ----------------->> %s" % request.session['passenger_id'])
             data = {
                 "Success": "Cab booked successfully"
             }
@@ -145,7 +133,6 @@ class TravelHistoryList(APIView):
 
     def get(self, request, format=None):
         passenger_id = request.session['passenger_id']
-        print("Passenageyu iioioa voh uv oa v aiov ha   %s"%passenger_id)
         passenger = Passenger.objects.get(pk=passenger_id)
         travel_history = TravelHistory.objects.filter(passenger_id=passenger)
         if len(travel_history) > 0:
@@ -157,6 +144,7 @@ class TravelHistoryList(APIView):
 
 
 class Logout(APIView):
+
     def get(self, request, format=None):
         del request.session['passenger_id']
         data = {'Logout': 'logged out successfully'}
