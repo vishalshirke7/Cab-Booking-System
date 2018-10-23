@@ -92,5 +92,5 @@ class Logout(APIView):
 
     def get(self, request, format=None):
         del request.session['driver_id']
-        # data = {"logout": "logged out successfully"}
-        return Response(request)
+        data = {"logout": "logged out successfully"}
+        return Response(data, status=status.HTTP_200_OK)
