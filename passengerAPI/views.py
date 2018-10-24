@@ -74,7 +74,7 @@ class GetListOfAvailableCab(APIView):
         serializer = GetAvailableCabSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            gmaps = googlemaps.Client(key='AIzaSyAOgj3TyH_vnb2ruto_A44YF8onzkzcoYc')
+            gmaps = googlemaps.Client(key='AIzaSyALWKpmu1YBGDTS7waWGFdokZgYWYJIQtE')
             request.session['source_address'] = request.data['Source_address']
             request.session['destination_address'] = request.data['Destination_address']
             geocode_result = gmaps.geocode(request.data['Source_address'])
