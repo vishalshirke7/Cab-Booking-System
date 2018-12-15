@@ -1,15 +1,15 @@
-from functools import partial
-
+from rest_framework import permissions
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from rest_framework import viewsets, views, generics, status
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
+
+from functools import partial
+
 from .models import Driver, DriverLocation, DriverRidesHistory
 from .serializers import DriverRegistrationSerializer, DriverLoginSerializer, DriverLocationSerializer, PassengerTravelHistorySerializer
-from rest_framework.parsers import JSONParser
-from rest_framework import permissions
 
 
 class CustomPermissions(permissions.BasePermission):

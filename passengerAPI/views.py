@@ -1,17 +1,16 @@
-import decimal
-from functools import partial
-from rest_framework import viewsets, views, generics, status, permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets, views, generics, status, permissions
+
+from functools import partial
+import geopy.distance
+import googlemaps
+
 from driverAPI.models import DriverLocation
 from driverAPI.serializers import DriverInfoSerializer
 from .models import Passenger, TravelHistory
-from rest_framework import serializers
 from .serializers import PassengerRegistrationSerializer, PassengerLoginSerializer, GetAvailableCabSerializer, BookCabSerializer, PassengerTravelHistorySerializer
-import geopy.distance
-import googlemaps
-import requests
 
 
 class CustomPermissionsForPassenger(permissions.BasePermission):
