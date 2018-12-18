@@ -17,7 +17,8 @@ class Driver(models.Model):
 
 class DriverLocation(models.Model):
     """
-    Storing Drivers Locations that are coming to server when driver is logged in into the application
+    Storing Drivers Locations that are coming to server
+    when driver is logged in into the application
 
     """
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)

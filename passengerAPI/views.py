@@ -1,7 +1,6 @@
-from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets, views, generics, status, permissions
+from rest_framework import status, permissions
 
 from functools import partial
 import geopy.distance
@@ -10,7 +9,10 @@ import googlemaps
 from driverAPI.models import DriverLocation
 from driverAPI.serializers import DriverInfoSerializer
 from .models import Passenger, TravelHistory
-from .serializers import PassengerRegistrationSerializer, PassengerLoginSerializer, GetAvailableCabSerializer, BookCabSerializer, PassengerTravelHistorySerializer
+from .serializers import PassengerRegistrationSerializer
+from .serializers import PassengerLoginSerializer
+from .serializers import GetAvailableCabSerializer, BookCabSerializer
+from .serializers import PassengerTravelHistorySerializer
 
 
 class CustomPermissionsForPassenger(permissions.BasePermission):
@@ -102,7 +104,8 @@ class GetListOfAvailableCab(APIView):
 class BookCab(APIView):
 
     """
-    This function makes a request to book cab by entering car_no, (selecting an available cab from map i.e tapping on it
+    This function makes a request to book cab by entering car_no,
+    (selecting an available cab from map i.e tapping on it
     in real scenario) and arrange a ride.
 
     """

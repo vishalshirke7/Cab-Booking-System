@@ -24,11 +24,3 @@ class TravelHistory(models.Model):
     car_no = models.CharField(max_length=50)
 
 
-# class RequestedCab(models.Model):
-#     car_no = models.IntegerField()
-#     passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
-#     source_add = models.TextField()
-#     dest_add = models.TextField()
-#     requested_time = models.DateTimeField(auto_now_add=True)
-
-

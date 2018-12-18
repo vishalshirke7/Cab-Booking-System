@@ -2,7 +2,6 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import Driver, DriverLocation, DriverRidesHistory
-from passengerAPI.models import Passenger
 
 
 class DriverRegistrationSerializer(serializers.ModelSerializer):
@@ -51,7 +50,6 @@ class DriverLocationSerializer(serializers.Serializer):
         obj.longitude = lon
         obj.save()
         return obj
-
 
 
 class PassengerTravelHistorySerializer(serializers.ModelSerializer):
